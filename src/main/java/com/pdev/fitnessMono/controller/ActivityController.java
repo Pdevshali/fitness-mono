@@ -21,7 +21,7 @@ public class ActivityController {
         return ResponseEntity.ok(activityService.trackActivity(request));
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<ActivityResponse>> getUserActivities(@PathVariable String userId) {
 
         return ResponseEntity.ok(activityService.getTrackingActivities(userId));
