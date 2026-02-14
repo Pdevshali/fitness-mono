@@ -29,15 +29,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("JwtAuthFilter: doFilterInternal called");
-        String requestURI = request.getRequestURI();
-        System.out.println("Request URI: " + requestURI);
-        // Skip JWT validation for public endpoints
-        if (requestURI.startsWith("/api/auth/login") || requestURI.startsWith("/api/auth/register")) {
-            System.out.println("JwtAuthFilter: Skipping authentication for public endpoint: " + requestURI);
-            filterChain.doFilter(request, response);
-            return;
-        }
-
 
         try {
             String jwt = parseJwt(request);

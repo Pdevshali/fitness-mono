@@ -7,6 +7,7 @@ import com.pdev.fitnessMono.dtos.UserResponse;
 import com.pdev.fitnessMono.model.User;
 import com.pdev.fitnessMono.security.JwtUtils;
 import com.pdev.fitnessMono.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -25,7 +26,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
         // Implement registration logic here
         return ResponseEntity.ok(userService.register(request));
     }
