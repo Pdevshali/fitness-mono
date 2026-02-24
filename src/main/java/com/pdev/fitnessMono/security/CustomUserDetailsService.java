@@ -16,7 +16,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     we are creating it because we are not directly using inbuilt User model. We are using Custom User
     model where user details is fetched from database */
 
-
     @Autowired
     private UserRepository userRepository;
 
