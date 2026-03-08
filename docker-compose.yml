@@ -1,0 +1,34 @@
+services:
+  # --- Existing Redis Services ---
+  redis-db:
+    image: redis:latest
+    container_name: my-redis
+    ports:
+      - "6380:6379" # Map my laptop's port 6380 → container's port 6379
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis-insight
+    ports:
+      - "5540:5540"
+    restart: always
+    depends_on:
+      - redis-db
+
+  # --- New MySQL Service ---
+  mysqldb:
+    image: mysql:8.0
+    container_name: fitness-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=fitness_mono_db
+      - MYSQL_USER=fitness_user
+      - MYSQL_PASSWORD=fitness_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+# THIS SECTION WAS MISSING OR MISALIGNED
+volumes:
+  mysql_data:

@@ -7,6 +7,9 @@ import com.pdev.fitnessMono.model.User;
 import com.pdev.fitnessMono.repository.ActivityRepository;
 import com.pdev.fitnessMono.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +24,10 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
+    @CachePut(value = "ACTIVITY_DATA", key="#result.id")
     @Override
     public ActivityResponse trackActivity(ActivityRequest request) {
        User user = userRepository.findById(request.getUserId())
@@ -37,6 +44,7 @@ public class ActivityServiceImpl implements ActivityService {
         return mapToResponse(savedActivity);
     }
 
+    @Cacheable(value = "USER_ACTIVITIES", key = "#userId")
     @Override
     public List<ActivityResponse> getTrackingActivities(String userId) {
         List<Activity> activities = activityRepository.findByUserId(userId);
