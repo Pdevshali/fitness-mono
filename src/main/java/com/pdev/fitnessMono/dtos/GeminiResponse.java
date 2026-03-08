@@ -6,10 +6,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class RecommendationsRequest {
-    private String userId;
-    private String activityId;
+public class GeminiResponse {
+
+    private List<String> improvements;
+    private List<String> suggestions;
+    private List<String> safety;
+
 }

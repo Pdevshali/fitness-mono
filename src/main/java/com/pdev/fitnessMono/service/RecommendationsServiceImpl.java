@@ -1,5 +1,6 @@
 package com.pdev.fitnessMono.service;
 
+import com.pdev.fitnessMono.dtos.GeminiResponse;
 import com.pdev.fitnessMono.dtos.RecommendationsRequest;
 import com.pdev.fitnessMono.model.Activity;
 import com.pdev.fitnessMono.model.Recommendations;
@@ -24,19 +25,25 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private GeminiService geminiService;
+
     @Override
     public Recommendations generateRecommendations(RecommendationsRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Activity activity = activityRepository.findById(request.getActivityId())
                 .orElseThrow(() -> new RuntimeException("Activity not found"));
+        GeminiResponse aiResponse =
+                geminiService.generateSuggestions(activity);
 
         Recommendations recommendations = new Recommendations();
-        recommendations.setActivity(activity);
+
         recommendations.setUser(user);
-        recommendations.setImprovements(request.getImprovements());
-        recommendations.setSuggestions(request.getSuggestions());
-        recommendations.setSafety(request.getSafety());
+        recommendations.setActivity(activity);
+        recommendations.setImprovements(aiResponse.getImprovements());
+        recommendations.setSuggestions(aiResponse.getSuggestions());
+        recommendations.setSafety(aiResponse.getSafety());
 
         return recommendationsRepository.save(recommendations);
     }
