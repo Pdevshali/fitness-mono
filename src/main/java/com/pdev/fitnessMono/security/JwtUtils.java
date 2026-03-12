@@ -6,6 +6,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -17,8 +18,11 @@ import java.util.List;
 @Slf4j
 public class JwtUtils {
 
-    private String jwtSecret = "YS1zdHJpbmctc2VjcmV0LWF0LWxlYXN0LTI1Ni1iaXRzLWxvbmc=";
-    private int jwtExpirationMs = 172800000;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+    
+    @Value("${jwt.expiration}")
+    private int jwtExpirationMs;
 
         /* getJwtFromHeader: extracts the JWT token from the Authorization header
         of the HTTP request. It checks if the header is present and starts
