@@ -1,5 +1,6 @@
 package com.pdev.fitnessMono.service;
 
+import com.pdev.fitnessMono.dtos.AiResponse;
 import com.pdev.fitnessMono.dtos.RecommendationsRequest;
 import com.pdev.fitnessMono.model.Activity;
 import com.pdev.fitnessMono.model.Recommendations;
@@ -24,19 +25,30 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private AiService aiService;
+
     @Override
     public Recommendations generateRecommendations(RecommendationsRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        Activity activity = activityRepository.findById(request.getActivityId())
-                .orElseThrow(() -> new RuntimeException("Activity not found"));
+        
+        // Get user's most recent activity for context
+        Activity mostRecentActivity = activityRepository.findTop1ByUserIdOrderByCreatedAtDesc(request.getUserId());
+
+        if (mostRecentActivity == null) {
+            throw new RuntimeException("No activities found for user. User needs to log some activities first.");
+        }
+        
+        // Generate user-specific suggestions based on recent activities
+        AiResponse aiResponse = aiService.generateSuggestions(request.getUserId());
 
         Recommendations recommendations = new Recommendations();
-        recommendations.setActivity(activity);
         recommendations.setUser(user);
-        recommendations.setImprovements(request.getImprovements());
-        recommendations.setSuggestions(request.getSuggestions());
-        recommendations.setSafety(request.getSafety());
+        recommendations.setActivity(mostRecentActivity);
+        recommendations.setImprovements(aiResponse.getImprovements());
+        recommendations.setSuggestions(aiResponse.getSuggestions());
+        recommendations.setSafety(aiResponse.getSafety());
 
         return recommendationsRepository.save(recommendations);
     }

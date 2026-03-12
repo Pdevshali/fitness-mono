@@ -13,7 +13,6 @@ import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Data
@@ -39,13 +38,19 @@ public class Activity {
     @Enumerated(EnumType.STRING)
     private ActivityType type;
 
+    // Essential fields
+    private Integer duration; // Duration in minutes
+    private Integer caloriesBurned; // Optional - can be calculated or estimated
+    private LocalDateTime startTime;
+    
+    // Optional advanced fields (can be filled later)
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
-    private Map<String, Object> additionalMatrics; // e.g., distance, pace, heart rate, etc.
+    private ActivityMetrics metrics; // Optional: detailed metrics for advanced users
 
-    private Integer duration; // Duration in minutes
-    private Integer caloriesBurned;
-    private LocalDateTime startTime;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    private ActivityContext context; // Optional: weather, equipment, intensity, etc.
 
     @CreationTimestamp
     private LocalDateTime createdAt;

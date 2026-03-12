@@ -32,11 +32,6 @@ public class Recommendations {
     @JsonIgnore
     private Activity activity;
 
-    private String type;
-
-    @Column(length = 2000)
-    private String recommendations;
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json")
     private List<String> improvements;

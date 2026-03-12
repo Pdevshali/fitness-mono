@@ -6,9 +6,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class RecommendationsRequest {
-    private String userId;
+public class AiResponse {
+
+    private List<String> improvements;
+    private List<String> suggestions;
+    private List<String> safety;
+
 }

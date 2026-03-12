@@ -28,6 +28,16 @@ public class User {
     private String firstName;
     private String  lastName;
 
+    // Optional Fitness Profile (can be filled later)
+    private Double weight; // in kg
+    private Double height; // in cm
+    
+    @Enumerated(EnumType.STRING)
+    private FitnessLevel fitnessLevel = FitnessLevel.BEGINNER;
+    
+    @Enumerated(EnumType.STRING)
+    private FitnessGoal primaryGoal = FitnessGoal.GENERAL_FITNESS;
+
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
