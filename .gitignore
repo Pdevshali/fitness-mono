@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+DEMO_REQUEST_BODIES.md
+IMPLEMENTATION_PLAN.md
