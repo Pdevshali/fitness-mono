@@ -1,6 +1,6 @@
 package com.pdev.fitnessMono.service;
 
-import com.pdev.fitnessMono.dtos.GeminiResponse;
+import com.pdev.fitnessMono.dtos.AiResponse;
 import com.pdev.fitnessMono.dtos.RecommendationsRequest;
 import com.pdev.fitnessMono.model.Activity;
 import com.pdev.fitnessMono.model.Recommendations;
@@ -26,21 +26,26 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     private ActivityRepository activityRepository;
 
     @Autowired
-    private GeminiService geminiService;
+    private AiService aiService;
 
     @Override
     public Recommendations generateRecommendations(RecommendationsRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        Activity activity = activityRepository.findById(request.getActivityId())
-                .orElseThrow(() -> new RuntimeException("Activity not found"));
-        GeminiResponse aiResponse =
-                geminiService.generateSuggestions(activity);
+        
+        // Get user's most recent activity for context
+        Activity mostRecentActivity = activityRepository.findTop1ByUserIdOrderByCreatedAtDesc(request.getUserId());
+
+        if (mostRecentActivity == null) {
+            throw new RuntimeException("No activities found for user. User needs to log some activities first.");
+        }
+        
+        // Generate user-specific suggestions based on recent activities
+        AiResponse aiResponse = aiService.generateSuggestions(request.getUserId());
 
         Recommendations recommendations = new Recommendations();
-
         recommendations.setUser(user);
-        recommendations.setActivity(activity);
+        recommendations.setActivity(mostRecentActivity);
         recommendations.setImprovements(aiResponse.getImprovements());
         recommendations.setSuggestions(aiResponse.getSuggestions());
         recommendations.setSafety(aiResponse.getSafety());

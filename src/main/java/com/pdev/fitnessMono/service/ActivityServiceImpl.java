@@ -30,8 +30,11 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setUser(user);
         activity.setDuration(request.getDuration());
         activity.setCaloriesBurned(request.getCaloriesBurned());
-        activity.setStartTime(request.getStartTime());
-        activity.setAdditionalMatrics(request.getAdditionalMatrics());
+        activity.setStartTime(request.getStartTime() != null ? request.getStartTime() : java.time.LocalDateTime.now());
+        
+        // Handle optional metrics and context
+        activity.setMetrics(request.getMetrics());
+        activity.setContext(request.getContext());
 
         Activity savedActivity = activityRepository.save(activity);
         return mapToResponse(savedActivity);
@@ -50,10 +53,14 @@ public class ActivityServiceImpl implements ActivityService {
         response.setId(savedActivity.getId());
         response.setUserId(savedActivity.getUser().getId());
         response.setType(savedActivity.getType());
+        
+        // Direct mapping - no conversion needed
+        response.setMetrics(savedActivity.getMetrics());
+        response.setContext(savedActivity.getContext());
+        
         response.setDuration(savedActivity.getDuration());
         response.setCaloriesBurned(savedActivity.getCaloriesBurned());
         response.setStartTime(savedActivity.getStartTime());
-        response.setAdditionalMatrics(savedActivity.getAdditionalMatrics());
         response.setCreatedAt(savedActivity.getCreatedAt());
         response.setUpdatedAt(savedActivity.getUpdatedAt());
         return response;

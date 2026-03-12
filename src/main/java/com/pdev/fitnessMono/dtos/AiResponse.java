@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class GeminiResponse {
+public class AiResponse {
 
     private List<String> improvements;
     private List<String> suggestions;

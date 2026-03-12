@@ -11,5 +11,4 @@ import java.util.List;
 @AllArgsConstructor
 public class RecommendationsRequest {
     private String userId;
-    private String activityId;
 }

@@ -9,4 +9,7 @@ import java.util.List;
 @Repository
 public interface ActivityRepository extends CrudRepository<Activity, String> {
     List<Activity> findByUserId(String userId);
+    List<Activity> findTop5ByUserIdOrderByCreatedAtDesc(String userId);
+
+    Activity findTop1ByUserIdOrderByCreatedAtDesc(String userId);
 }
